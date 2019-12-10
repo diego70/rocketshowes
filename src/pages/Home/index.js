@@ -1,85 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdShoppingCart } from 'react-icons/md';
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
 import { ProductList } from './styles';
 
-const image =
-  'https://static.netshoes.com.br/produtos/tenis-puma-mapm-kart/44/D14-9603-244/D14-9603-244_detalhe2.jpg?ims=326x';
-export default function Home() {
-  return (
-    <ProductList>
-      <li>
-        <img src={image} alt="item" />
+export default class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: [],
+    };
+  }
 
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-      <li>
-        <img src={image} alt="item" />
+  async componentDidMount() {
+    const response = await api.get('products');
+    const data = response.data.map(product => ({
+      ...product,
+      priceformatted: formatPrice(product.price),
+    }));
 
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-      <li>
-        <img src={image} alt="item" />
+    this.setState({ products: data });
+  }
 
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-      <li>
-        <img src={image} alt="item" />
+  render() {
+    const { products } = this.state;
+    return (
+      <ProductList>
+        {products.map(product => (
+          <li key={product.id}>
+            <img src={product.image} alt={product.title} />
 
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-      <li>
-        <img src={image} alt="item" />
-
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-      <li>
-        <img src={image} alt="item" />
-
-        <strong>Tênis muito legal</strong>
-        <span>R$129,99</span>
-        <button type="button">
-          <div>
-            <MdShoppingCart size={16} color="#fff" /> 3
-          </div>
-          <span>ADICIONAR AO CAMINHO</span>
-        </button>
-      </li>
-    </ProductList>
-  );
+            <strong>{product.title}</strong>
+            <span>{product.priceformatted}</span>
+            <button type="button">
+              <div>
+                <MdShoppingCart size={16} color="#fff" /> 3
+              </div>
+              <span>ADICIONAR AO CAMINHO</span>
+            </button>
+          </li>
+        ))}
+      </ProductList>
+    );
+  }
 }
