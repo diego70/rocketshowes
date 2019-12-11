@@ -11,7 +11,7 @@ import { Container, ProductTable, Total } from './styles';
 const image =
   'https://static.netshoes.com.br/produtos/tenis-puma-mapm-kart/44/D14-9603-244/D14-9603-244_detalhe2.jpg?ims=326x';
 
-function Cart({ cart }) {
+function Cart({ cart, dispatch }) {
   return (
     <Container>
       <ProductTable>
@@ -49,7 +49,14 @@ function Cart({ cart }) {
                 <strong>R$258,80</strong>
               </td>
               <td>
-                <MdDelete size={20} color="#7159c1" />
+                <button
+                  type="button"
+                  onClick={() =>
+                    dispatch({ type: 'REMOVE_FROM_CART', id: product.id })
+                  }
+                >
+                  <MdDelete size={20} color="#7159c1" />
+                </button>
               </td>
             </tr>
           ))}
